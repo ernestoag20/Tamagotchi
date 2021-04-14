@@ -1,23 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.OleDb;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Drawing;
-using System.Threading;
 using System.Media;
 using System.IO;
 
@@ -41,7 +30,6 @@ namespace Tamagotchi
         bool repetir3 = true;
         bool repetir4 = true;
         bool repetir5 = true;
-        bool parar = true;
         string ruta = Directory.GetCurrentDirectory();
         int puntos_primero;
 
@@ -57,14 +45,12 @@ namespace Tamagotchi
             pb_energia.Value = 100;
             pb_diversion.Value = 100;
             pb_alimento.Value = 100;
-
         }
 
         public void setNombre(string nombre)
         {
             this.nombreTamagotchi = nombre;
         }
-
 
         private async void reloj(object sender, EventArgs e)
         {
@@ -74,12 +60,6 @@ namespace Tamagotchi
             this.pb_energia.Value -= dec_energia;
             this.pb_alimento.Value -= dec_alimento;
             this.pb_diversion.Value -= dec_diversion;
-
-            if (pb_energia.Value <= 5 || pb_alimento.Value <= 5 || pb_diversion.Value <= 5)
-            {
-                parar = false;
-
-            }
 
             if (pb_energia.Value == 0 || pb_alimento.Value == 0 || pb_diversion.Value == 0)
             {
@@ -106,8 +86,10 @@ namespace Tamagotchi
                 t1.Start();
             }
 
-            if (puntos > 1000 && puntos_primero < puntos)
+            if (puntos >= 1000 && puntos_primero < puntos)
             {
+                t1.Stop();
+                await Task.Delay(3000);
                 dec_alimento = 0;
                 dec_diversion = 0;
                 dec_energia = 0;
@@ -131,8 +113,6 @@ namespace Tamagotchi
                 eleccion();
                 Player.Stop();
                 t1.Start();
-
-
             }
         }
 
@@ -140,19 +120,19 @@ namespace Tamagotchi
         {
             if (nivel == 0)
             {
-                puntos += 20;
+                puntos += 10;
             }
             if (nivel == 1)
             {
-                puntos += 30;
+                puntos += 20;
             }
             if (nivel == 2 || nivel == 3)
             {
-                puntos += 50;
+                puntos += 45;
             }
             if (nivel == 4 || nivel == 5)
             {
-                puntos += 80;
+                puntos += 70;
             }
             this.pb_energia.Value += 20;
             btn_jugar.IsEnabled = true;
@@ -162,22 +142,17 @@ namespace Tamagotchi
             z_sueño.Visibility = Visibility.Visible;
             z_sueño2.Visibility = Visibility.Visible;
             z_sueño3.Visibility = Visibility.Visible;
-            if (parar)
-            {
-                btn_jugar.IsEnabled = false;
-                btn_comer.IsEnabled = false;
-                btn_energia.IsEnabled = false;
-                Storyboard dormir = (Storyboard)this.Resources["dormir"];
-                dormir.Completed += new EventHandler(finDormir);
-                dormir.Begin();
-                SoundPlayer Player = new SoundPlayer();
-                string path = Directory.GetCurrentDirectory();
-                Player.SoundLocation = path + "/Sonidos/dormir.wav"; ;
-                Player.Play();
-            }
             
- 
-
+            btn_jugar.IsEnabled = false;
+            btn_comer.IsEnabled = false;
+            btn_energia.IsEnabled = false;
+            Storyboard dormir = (Storyboard)this.Resources["dormir"];
+            dormir.Completed += new EventHandler(finDormir);
+            dormir.Begin();
+            SoundPlayer Player = new SoundPlayer();
+            string path = Directory.GetCurrentDirectory();
+            Player.SoundLocation = path + "/Sonidos/dormir.wav"; ;
+            Player.Play();
         }
 
         private void finDormir(object sender, EventArgs e)
@@ -206,48 +181,54 @@ namespace Tamagotchi
         {
             if (nivel == 0)
             {
-                puntos += 20;
+                puntos += 10;
             }
             if (nivel == 1)
             {
-                puntos += 30;
+                puntos += 20;
+            }
+            if (lanza.Visibility == Visibility.Visible)
+            {
+                puntos += 20;
+            }
+            if (bandera_roja.Visibility == Visibility.Visible)
+            {
+                puntos += 80;
+            }
+            if (banderin.Visibility == Visibility.Visible)
+            {
+                puntos += 10;
             }
             if (nivel == 2 || nivel == 3)
             {
-                puntos += 50;
+                puntos += 45;
             }
             if (nivel == 4 || nivel == 5)
             {
-                puntos += 80;
+                puntos += 70;
             }
             this.pb_alimento.Value += 20;
             btn_jugar.IsEnabled = true;
             btn_comer.IsEnabled = true;
             btn_energia.IsEnabled = true;
 
-            if (parar)
-            {
-                btn_jugar.IsEnabled = false;
-                btn_comer.IsEnabled = false;
-                btn_energia.IsEnabled = false;
-                manzana_.Visibility = Visibility.Visible;
-                manzana_uno.Visibility = Visibility.Visible;
-                manzana_dos.Visibility = Visibility.Visible;
-                manzana_final.Visibility = Visibility.Visible;
-                Storyboard sb_comer = (Storyboard)this.Resources["comer"];
-                sb_comer.Completed += new EventHandler(finComer);
-                Storyboard manzana = (Storyboard)this.Resources["manzana"];
-                manzana.Completed += new EventHandler(finComer);
-                sb_comer.Begin();
-                manzana.Begin();
-                SoundPlayer Player = new SoundPlayer();
-                Player.SoundLocation = ruta + "/Sonidos/comer.wav"; ;
-                Player.Play();
-            }
-;
-
+            btn_jugar.IsEnabled = false;
+            btn_comer.IsEnabled = false;
+            btn_energia.IsEnabled = false;
+            manzana_.Visibility = Visibility.Visible;
+            manzana_uno.Visibility = Visibility.Visible;
+            manzana_dos.Visibility = Visibility.Visible;
+            manzana_final.Visibility = Visibility.Visible;
+            Storyboard sb_comer = (Storyboard)this.Resources["comer"];
+            sb_comer.Completed += new EventHandler(finComer);
+            Storyboard manzana = (Storyboard)this.Resources["manzana"];
+            manzana.Completed += new EventHandler(finComer);
+            sb_comer.Begin();
+            manzana.Begin();
+            SoundPlayer Player = new SoundPlayer();
+            Player.SoundLocation = ruta + "/Sonidos/comer.wav"; 
+            Player.Play();
         } 
-
 
         private void ranking(string nombre, int puntos)
         {
@@ -298,7 +279,6 @@ namespace Tamagotchi
             repetir3 = true;
             repetir4 = true;
             repetir5 = true;
-            parar = true;
             lbl_puntuacion.Visibility = Visibility.Hidden; ;
             lbl_gameover.Visibility = Visibility.Hidden;
             img_nivel1.Visibility = Visibility.Hidden;
@@ -312,8 +292,8 @@ namespace Tamagotchi
             img_final_futbol.Visibility = Visibility.Hidden;
             img_bayern.Visibility = Visibility.Hidden;
             img_victoria.Visibility = Visibility.Hidden;
+            img_wanda_metropolitano.Visibility = Visibility.Hidden;
         }
-
 
         private void nuevo_jugador()
         {
@@ -396,11 +376,11 @@ namespace Tamagotchi
             btn_energia.IsEnabled = true;
             if (nivel == 0)
             {
-                puntos += 20;
+                puntos += 10;
             }
             if(nivel == 1 )
             {
-                puntos += 30;
+                puntos += 20;
             }
             if (lanza.Visibility == Visibility.Visible)
             {
@@ -408,37 +388,33 @@ namespace Tamagotchi
             }
             if (bandera_roja.Visibility == Visibility.Visible)
             {
-                puntos += 10;
+                puntos += 40;
             }
             if (banderin.Visibility == Visibility.Visible)
             {
-                puntos += 1;
+                puntos += 10;
             }
 
             if(nivel == 2 || nivel == 3)
             {
-                puntos += 50;
+                puntos += 45;
             }
             if(nivel == 4 || nivel == 5)
             {
-                puntos += 80;
+                puntos += 70;
             }
 
-            if (parar)
-            {
-                pelota_roja.Visibility = Visibility.Visible;
-                btn_jugar.IsEnabled = false;
-                btn_comer.IsEnabled = false;
-                btn_energia.IsEnabled = false;
-                Storyboard sb_jugar = (Storyboard)this.Resources["jugar_pelota"];
-                sb_jugar.Completed += new EventHandler(finJugar);
-                sb_jugar.Begin();
-                this.pb_diversion.Value += 20;
-                SoundPlayer Player = new SoundPlayer();
-                Player.SoundLocation = ruta + "/Sonidos/jugar_.wav"; ;
-                Player.Play();
-            }
-
+            pelota_roja.Visibility = Visibility.Visible;
+            btn_jugar.IsEnabled = false;
+            btn_comer.IsEnabled = false;
+            btn_energia.IsEnabled = false;
+            Storyboard sb_jugar = (Storyboard)this.Resources["jugar_pelota"];
+            sb_jugar.Completed += new EventHandler(finJugar);
+            sb_jugar.Begin();
+            this.pb_diversion.Value += 20;
+            SoundPlayer Player = new SoundPlayer();
+            Player.SoundLocation = ruta + "/Sonidos/jugar_.wav"; ;
+            Player.Play();
 
         }
 
@@ -449,7 +425,7 @@ namespace Tamagotchi
             lanza.Visibility = Visibility.Hidden;
         }
 
-        private void animacion_nivel()
+        private async void animacion_nivel()
         {
             grid_logro.Visibility = Visibility.Visible;
             Storyboard logro = (Storyboard)this.Resources["LogroAtleti"];
@@ -459,14 +435,14 @@ namespace Tamagotchi
             Player.Play();
 
         }
-        private void niveles()
+        private async void niveles()
         {
             if (puntos < 50)
             {
                 nivel = 0;
-                dec_alimento = 10;
-                dec_diversion = 1;
-                dec_energia = 1;
+                dec_alimento = 2;
+                dec_diversion = 2;
+                dec_energia = 2;
                 Image myImage3 = new Image();
                 BitmapImage bi3 = new BitmapImage();
                 bi3.BeginInit();
@@ -484,6 +460,7 @@ namespace Tamagotchi
                 puntos += 10;
                 repetir = false;
                 animacion_nivel();
+
             }
             if (puntos >= 120 && repetir2 && puntos < 300)
             {
@@ -529,9 +506,9 @@ namespace Tamagotchi
             if (puntos >=50 && puntos < 120)
             {
                 nivel = 1;
-                dec_alimento = 2;
-                dec_diversion = 2;
-                dec_energia = 2;
+                dec_alimento = 3;
+                dec_diversion = 3;
+                dec_energia = 3;
                 img_nivel1.Visibility = Visibility.Visible;
                 Image myImage3 = new Image();
                 BitmapImage bi3 = new BitmapImage();
@@ -546,9 +523,9 @@ namespace Tamagotchi
             if(puntos >=120 && puntos < 300)
             {
                 nivel = 2;
-                dec_alimento = 3;
-                dec_diversion = 3;
-                dec_energia = 3;
+                dec_alimento = 4;
+                dec_diversion = 4;
+                dec_energia = 4;
                 img_nivel2.Visibility = Visibility.Visible;
                 Image myImage3 = new Image();
                 BitmapImage bi3 = new BitmapImage();
@@ -563,9 +540,9 @@ namespace Tamagotchi
             if (puntos >= 300 && puntos < 600)
             {
                 nivel = 3;
-                dec_alimento = 4;
-                dec_diversion = 4;
-                dec_energia = 4;
+                dec_alimento = 5;
+                dec_diversion = 5;
+                dec_energia = 5;
                 img_nivel3.Visibility = Visibility.Visible;
                 Image myImage3 = new Image();
                 BitmapImage bi3 = new BitmapImage();

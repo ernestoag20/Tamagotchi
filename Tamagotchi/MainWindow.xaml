@@ -2606,7 +2606,7 @@
                 <ColumnDefinition Width="301*"/>
             </Grid.ColumnDefinitions>
             <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Height="80">
-                <TextBox x:Name="lbl_gameover" TextWrapping="Wrap" Text="GAME OVER" Height="20" BorderBrush="{x:Null}" Visibility="Hidden"/>
+                <TextBox x:Name="lbl_gameover" TextWrapping="Wrap" Text="GAME OVER!" Height="20" BorderBrush="{x:Null}" Visibility="Hidden" FontWeight="Bold"/>
             </Viewbox>
             <Viewbox Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
                 <TextBox x:Name="lbl_puntuacion" TextWrapping="Wrap" Visibility="Hidden" BorderBrush="{x:Null}"/>
